@@ -1,0 +1,131 @@
+Задача 1 (на таймеры)
+//Написать функцию counter(n)
+function counter(n) {
+    var interval = setInterval(function() {
+        console.log(n);
+        n--;
+        if (n < 0) {
+            clearInterval(interval);
+        }
+    }, 1000);
+}
+
+//Написать функцию createCounter(n)
+function createCounter(n) {
+    let count = n;
+    let intervalId;
+
+    function start() {
+        intervalId = setInterval(() => {
+            if (count > 0) {
+                console.log(count);
+                count--;
+            } else {
+                clearInterval(intervalId);
+            }
+        }, 1000);
+    }
+
+    function pause() {
+        clearInterval(intervalId);
+    }
+
+    function stop() {
+        clearInterval(intervalId);
+        count = n;
+    }
+
+    return {
+        start,
+        pause,
+        stop
+    };
+}
+
+Задача 2
+
+//Написать функцию delay(N), 
+function delay(n) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, n * 1000);
+    });
+}
+
+
+//Решить задачу со счётчиком через функцию delay
+function delayCounter(N) {
+    return new Promise((resolve, reject) => {
+        if (N < 0) {
+            reject("Неверное значение N");
+        } else {
+            (function countdown(counter) {
+                if (counter >= 0) {
+                    delay(1).then(() => {
+                        console.log(counter);
+                        countdown(counter - 1);
+                    });
+                } else {
+                    resolve();
+                }
+            })(N);
+        }
+    });
+}
+
+function delay(seconds) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, seconds * 1000);
+    });
+}
+
+
+//Написать функцию, возвращающую название первого репозитория на github.com по имени пользователя
+async function getFirstRepository(username) {
+        const response = await fetch(`https://api.github.com/users/${username}`);
+        const userData = await response.json();
+        const reposResponse = await fetch(userData.repos_url);
+        const reposData = await reposResponse.json();
+        const firstRepo = reposData[0];
+        return firstRepo.name;
+}
+
+
+//Перепишите, используя async/await вместо .then/catch.
+class HttpError extends Error {
+  constructor(response) {
+    super(`${response.status} for ${response.url}`);
+    this.name = 'HttpError';
+    this.response = response;
+  }
+}
+
+async function loadJson(url) {
+  const response = await fetch(url);
+  if (response.status == 200) {
+    return response.json();
+  } else {
+    throw new HttpError(response);
+  }
+}
+
+async function getGithubUser() {
+  let user;
+  while (!user) {
+    let name = prompt("Введите логин?", "iliakan");
+    try {
+      user = await loadJson(`https://api.github.com/users/${name}`);
+      alert(`Полное имя: ${user.name}.`);
+    } catch (err) {
+      if (err instanceof HttpError && err.response.status == 404) {
+        alert("Такого пользователя не существует, пожалуйста, повторите ввод.");
+      } else {
+        throw err;
+      }
+    }
+  }
+  return user;
+}
+
+getGithubUser();
