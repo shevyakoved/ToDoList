@@ -9,31 +9,33 @@
 </head>
 
 <body>
-    <h1 class="label">Список дел</h1>
-    <div class="control">
-        <input class="newElementInput" type="text" placeholder="Новый элемент списка">
-        <button class="create">Создать</button>
-        <button class="clear">Очистить всё</button>
+    <div class="wrapper">
+        <h1 class="label">Список дел</h1>
+        <div class="control">
+            <input class="newElementInput" type="text" placeholder="Новый элемент списка">
+            <button class="create">Создать</button>
+            <button class="clear">Очистить всё</button>
+        </div>
+
+
+        <div class="list">
+
+        </div>
+
+        <div class="statistics">
+            <hr class="statistics hr" />
+            <ul class="info">
+                <li><button class="completedtasks"></button></li>
+                <li><button class="uncompletedtasks"></button></li>
+                <li><button class="alltask"></button></li>
+            </ul>
+        </div>
+
+        <footer class="footer">
+            <hr/>
+            <p>Copyright ©</p>
+        </footer>
     </div>
-
-
-    <div class="list">
-
-    </div>
-
-    <div class="statistics">
-        <hr class="statistics hr" />
-        <ul class="info">
-            <li><button class="completedtasks"></button></li>
-            <li><button class="uncompletedtasks"></button></li>
-            <li><button class="alltask"></button></li>
-        </ul>
-    </div>
-
-    <footer class="footer">
-        <hr/>
-        <p>Copyright ©</p>
-    </footer>
     <script src="build/vasya.bundle.js"></script>
 </body>
 
