@@ -1,0 +1,66 @@
+//Написать компонент, выводящий квадрат переданного числа:
+
+import React from 'react';
+
+const Square = ({ n }) => {
+  return (
+    <div>
+      {n * n}
+    </div>
+  );
+};
+
+export default Square;
+
+
+//Написать компонент, выводящий только чётные элементы переданного массива:
+
+import React from 'react';
+let arr = [14, 5, 6, 12, 21, 2]
+
+const Square = () => {
+        const OnlyEven = arr.filter(item => item % 2 === 0)
+
+        return (
+            <div>
+                {OnlyEven.map((item, index) => (< div key = { index } > { /* временное решение */ } { item } </div>))}         
+            </div>
+                );
+        };
+                export default Square;
+
+
+//Написать компонент, отображающий переданную ему температуру воздуха. Если температура ниже нуля, отображаются синие цифры, если выше, то красные:
+
+import React from 'react';
+
+const Temperature = ({ n }) => {
+    if (n >= 0) {
+        return <div style = {
+            { color: 'red' } } > { n } < /div>;
+    }
+    return <div style = {
+        { color: 'blue' } } > { n } < /div>;
+};
+
+export default Temperature;
+
+
+//Сделать кнопку, которая при нажатии меняет цвет фона с красного на зелёный и обратно:
+
+import React, { useState } from 'react';
+
+const Button     = () => {
+  const [backgroundColor, setBackgroundColor] = useState('red');
+
+  const handleButtonClick = () => {
+    const newColor = backgroundColor === 'red' ? 'green' : 'red';
+    setBackgroundColor(newColor);
+  };
+
+  return (
+    <button onClick={handleButtonClick}style={{ backgroundColor, color: "white"}}>Change Color</button>
+  );
+};
+
+export default Button;
