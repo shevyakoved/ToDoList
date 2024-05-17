@@ -1,0 +1,171 @@
+//Сделать обратный таймер, который идёт от 10 до 0 и останавливается (используя useEffect).
+import React, { useState, useEffect } from 'react';
+
+function Timer() {
+    const [time, setTime] = useState(10);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setTime(prevTime => {
+                if (prevTime > 0) {
+                    return prevTime - 1;
+                } 
+            });
+        }, 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    return <span>{time}</span>;
+}
+export default Timer;
+
+
+//Сделать таймер, который начинает идти от 0 до бесконечности при нажатии кнопки ▶.
+
+(Timer.js)
+import React, { useState, useEffect } from 'react';
+
+const Timer = ({ start }) => {
+    const [time, setTime] = useState(0);
+
+    useEffect(() => {
+        let timer;
+        if (start) {
+            timer = setInterval(() => {
+                setTime(prevTime => prevTime + 1);
+            }, 1000);
+        }
+
+        return () => clearInterval(timer);
+    }, [start]);
+
+    return <span>{time}</span>;
+}
+
+export default Timer;
+
+(App.js)
+function App() {
+  const [startTimer, setStartTimer] = useState(false);
+
+  const handleStartTimer = () => {
+      setStartTimer(true);
+  };
+
+  return (
+      <div className="App">
+          <header className="App-header">
+              <img src={logo} className="App-logo" alt="logo" />
+              <div>
+                  <button onClick={handleStartTimer}>
+                      <img src={123} width={400} height={400}/>
+                  </button>
+              </div>
+              {startTimer && <Timer start={startTimer} />}
+          </header>
+      </div>
+  );
+}
+
+export default App;
+
+
+//Сделать вывод простых чисел раз в секунду. Каждую следующую секунду в строку добавляется очередное простое число: Выводит: 2, 3, 5, 7, 11, 13, ...
+
+(Primer.js)
+import React, { useState, useEffect } from 'react';
+
+function Primer() {
+    const [primes, setPrimes] = useState([]);
+    const [lastPrime, setLastPrime] = useState(1);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            let nextPrime = lastPrime + 1;
+            while (!isPrime(nextPrime)) {
+                nextPrime++;
+            }
+            setPrimes(primes => [...primes, nextPrime]);
+            setLastPrime(nextPrime);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [lastPrime]);
+
+    return <span>{primes.join(', ')}</span>;
+}
+
+function isPrime(n) {
+    if (n < 2) {
+        return false;
+    }
+    for (let i = 2; i <= Math.sqrt(n); i++) {
+        if (n % i === 0) {
+            return false;
+        }
+    }
+    return true;
+}
+export default Primer;
+
+(App.js)
+<div>
+     <Primer/>
+</div>
+
+//Светофор 
+
+(Lighter)
+import React, { useState, useEffect } from 'react';
+
+function Lighter() {
+    let lights = ['red', 'yellow', 'green', 'yellow']
+    let counter = 0
+    const Light = () => {
+        const [color, setColor] = useState('red')
+
+        useEffect(() => {
+            const interval = setInterval(() => {
+                counter = (counter + 1) % lights.length
+                setColor(lights[counter]);
+            }, 3000);
+            return () => clearInterval(interval)
+        }, [])
+        return ( 
+              <div style = {{ height: '100px', width: '100px', backgroundColor: color } } > </div>
+        );
+    }
+    return <Light /> ;
+}
+export default Lighter;
+
+(App.js)
+<div>
+    <Lighter/>
+</div>
+
+//Написать компонент, принимающий на вход строку и каждую секунду переносящий последний символ строки в начало
+
+(Revert.js)
+import React, { useState, useEffect } from 'react';
+
+function Revert({t}) {
+    const [s, transfom] = useState(t);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            transfom(prev => {
+                let tmp = prev[prev.length - 1];
+                let stmp = prev.slice(0, -1);
+                return tmp + stmp;
+            });
+        }, 1000)
+        return () => clearInterval(interval);
+    }, [])
+    return <div>{s}</div>;
+}
+export default Revert;
+
+(App.js)
+<div>
+   <Revert t = "привет!"/>
+</div>
