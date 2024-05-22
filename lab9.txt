@@ -1,0 +1,541 @@
+Сделать компонент, отображающий селектбокс с городами. Если выбран не Рио, писать снизу: "Нет, это не Рио-де-Жанейро!"
+
+import React, { useState } from 'react';
+
+const CitySelector = () => {
+  const [selectedCity, setSelectedCity] = useState('');
+
+  const cities = [
+    'Нью-Йорк',
+    'Лондон',
+    'Париж',
+    'Токио',
+    'Рио-де-Жанейро',
+    'Сидней',
+    'Москва',
+  ];
+
+  const handleCityChange = (event) => {
+    setSelectedCity(event.target.value);
+  };
+
+  return (
+    <div>
+      <select value={selectedCity} onChange={handleCityChange}>
+        <option value="" disabled>Выберите город</option>
+        {cities.map((city) => (
+          <option key={city} value={city}>
+            {city}
+          </option>
+        ))}
+      </select>
+      {selectedCity && selectedCity !== 'Рио-де-Жанейро' && (
+        <p>Нет, это не Рио-де-Жанейро!</p>
+      )}
+    </div>
+  );
+};
+
+export default CitySelector;
+
+(App)
+const App = () => (
+  <div>
+    <h1>Выберите город</h1>
+    <CitySelector />
+  </div>
+);
+
+
+Сделать калькулятор с двумя полями ввода чисел, полем выбора действия и выводом результата текстом рядом: 2 + 2 = 4
+
+import React, { useState } from 'react';
+
+const Calculator = () => {
+  const [num1, setNum1] = useState('');
+  const [num2, setNum2] = useState('');
+  const [operation, setOperation] = useState('+');
+  const [result, setResult] = useState(null);
+
+  const handleCalculate = () => {
+    let res;
+    const n1 = parseFloat(num1);
+    const n2 = parseFloat(num2);
+    
+    switch (operation) {
+      case '+':
+        res = n1 + n2;
+        break;
+      case '-':
+        res = n1 - n2;
+        break;
+      case '*':
+        res = n1 * n2;
+        break;
+      case '/':
+        res = n2 !== 0 ? n1 / n2 : 'Error: Division by zero';
+        break;
+      default:
+        res = 'Invalid operation';
+    }
+
+    setResult(res);
+  };
+
+  return (
+    <div className="calculator">
+      <h1>Calculator</h1>
+      <div>
+        <input 
+          type="number" 
+          value={num1} 
+          onChange={(e) => setNum1(e.target.value)} 
+          placeholder="First number"
+        />
+        <select value={operation} onChange={(e) => setOperation(e.target.value)}>
+          <option value="+">+</option>
+          <option value="-">-</option>
+          <option value="*">*</option>
+          <option value="/">/</option>
+        </select>
+        <input 
+          type="number" 
+          value={num2} 
+          onChange={(e) => setNum2(e.target.value)} 
+          placeholder="Second number"
+        />
+        <button onClick={handleCalculate}>Calculate</button>
+      </div>
+      {result !== null && (
+        <div>
+          <h2>Result: {num1} {operation} {num2} = {result}</h2>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Calculator;
+
+
+(App)
+function App() {
+  return (
+    <div className="App">
+      <Calculator />
+    </div>
+  );
+}
+
+
+
+Калькулятор систем счисления: 15 в 10-чной системе. 1111 в 2 системе.
+Исходное число вводится в поле ввода, система счисления выбирается из предлложенных, результат отображается во втором поле
+
+
+import React, { useState } from 'react';
+
+function BaseConverter() {
+  const [inputValue, setInputValue] = useState('');
+  const [inputBase, setInputBase] = useState('10');
+  const [outputBase, setOutputBase] = useState('2');
+  const [result, setResult] = useState('');
+
+  const convertNumber = () => {
+      const decimalValue = parseInt(inputValue, parseInt(inputBase, 10));
+      if (isNaN(decimalValue)) {
+        setResult('Неверный ввод');
+      } else {
+        const convertedValue = decimalValue.toString(parseInt(outputBase, 10));
+        setResult(convertedValue.toUpperCase());
+      }
+  };
+
+  return (
+    <div>
+      <h2>Калькулятор</h2>
+      <div>
+        <label>
+          Число:
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          Input Base:
+          <select value={inputBase} onChange={(e) => setInputBase(e.target.value)}>
+            <option value="2">Двоичная (2)</option>
+            <option value="10">Десятичная (10)</option>
+          </select>
+        </label>
+      </div>
+      <div>
+        <label>
+          Output Base:
+          <select value={outputBase} onChange={(e) => setOutputBase(e.target.value)}>
+            <option value="2">Двоичная (2)</option>
+            <option value="10">Десятичная (10)</option>
+          </select>
+        </label>
+      </div>
+      <button onClick={convertNumber}>Вычислить</button>
+      <div>
+        <h3>Результат:</h3>
+        <p>{result}</p>
+      </div>
+    </div>
+  );
+}
+
+export default BaseConverter;
+
+(App.js)
+function App() {
+  return (
+    <div className="App">
+      <BaseConverter />
+    </div>
+  );
+
+
+В поле ввода выбираем дату рождения: дд.мм.гггг
+Ниже выводится текстом: "Вы прожили: 1232352345234 секунд."
+Количество секунд увеличивается каждую секунду.
+
+import React, { useState, useEffect } from 'react';
+
+const AgeInSeconds = () => {
+  const [birthDate, setBirthDate] = useState('');
+  const [secondsLived, setSecondsLived] = useState(0);
+
+  useEffect(() => {
+    let interval;
+    if (birthDate) {
+      interval = setInterval(() => {
+        const birthTime = new Date(birthDate).getTime();
+        const currentTime = Date.now();
+        const seconds = Math.floor((currentTime - birthTime) / 1000);
+        setSecondsLived(seconds);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [birthDate]);
+
+  const handleDateChange = (e) => {
+    setBirthDate(e.target.value);
+  };
+
+  return (
+    <div>
+        <h1>Время жизни</h1>
+      <input
+        type="date"
+        value={birthDate}
+        onChange={handleDateChange}
+        placeholder="дд.мм.гггг"
+      />
+      {birthDate && (
+        <div>Вы прожили: {secondsLived.toLocaleString()} секунд.</div>
+      )}
+    </div>
+  );
+};
+
+export default AgeInSeconds;
+
+(App.js)
+function App() {
+  return (
+    <div className="App">
+      <AgeInSeconds />
+    </div>
+  );
+}
+
+
+Список чисел с фильтрацией: [поле ввода числа] [+] Все Четные Нечетные 1, 13, 6, 52, 4, 14
+При нажатии на [+] в список добавляется очередное число из поля ввода. При изменении состояния фильтра список обновляется.
+
+import React, { useState } from 'react';
+
+const NumberFilterApp = () => {
+  const [numbers, setNumbers] = useState([1, 13, 6, 52, 4, 14]);
+  const [inputNumber, setInputNumber] = useState('');
+  const [filter, setFilter] = useState('all');
+
+  const handleAddNumber = () => {
+    if (inputNumber !== '') {
+      setNumbers([...numbers, parseInt(inputNumber)]);
+      setInputNumber('');
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setInputNumber(e.target.value);
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+  };
+
+  const getFilteredNumbers = () => {
+    if (filter === 'Чётные') {
+      return numbers.filter(number => number % 2 === 0);
+    } else if (filter === 'Нечётные') {
+      return numbers.filter(number => number % 2 !== 0);
+    } else {
+      return numbers;
+    }
+  };
+
+  return (
+    <div>
+      <h1>Список чисел с фильтрацией</h1>
+      <input
+        type="number"
+        value={inputNumber}
+        onChange={handleInputChange}
+        placeholder="Введите число"
+      />
+      <button onClick={handleAddNumber}>+</button>
+      <div>
+        <button onClick={() => handleFilterChange('Все')}>Все</button>
+        <button onClick={() => handleFilterChange('Чётные')}>Чётные</button>
+        <button onClick={() => handleFilterChange('Нечётные')}>Нечётные</button>
+      </div>
+      <ul style = {{listStyleType: 'none'}}>
+        {getFilteredNumbers().map((number, index) => (
+          <li  key={index}>{number}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default NumberFilterApp;
+
+(App.js)
+function App() {
+  return (
+    <div className="App">
+      <NumberFilterApp />
+    </div>
+  );
+}
+
+
+Написать валидацию формы регистрации:
+
+import React, { useState } from 'react';
+
+const RegistrationForm = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = {};
+    
+    if (!formData.username.trim()) {
+      validationErrors.username = 'Логин обязателен';
+    } else if (formData.username.trim().length < 6 || formData.username.trim().length > 20) {
+      validationErrors.username = 'Логин должен содержать от 6 до 20 символов';
+    } else if (!/^[a-zA-Z0-9]+$/.test(formData.username.trim())) {
+      validationErrors.username = 'Логин может содержать только латинские буквы и цифры';
+    }
+
+    if (!formData.password.trim()) {
+      validationErrors.password = 'Пароль обязателен';
+    }
+
+    if (formData.password.trim() !== formData.confirmPassword.trim()) {
+      validationErrors.confirmPassword = 'Пароли не совпадают';
+    }
+
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      console.log('Форма отправлена:', formData);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="username">Логин:</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+        />
+        {errors.username && <span style={{ color: 'red' }}>{errors.username}</span>}
+      </div>
+      <div>
+        <label htmlFor="password">Пароль:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+        />
+        {errors.password && <span style={{ color: 'red' }}>{errors.password}</span>}
+      </div>
+      <div>
+        <label htmlFor="confirmPassword">Повтор пароля:</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+        />
+        {errors.confirmPassword && <span style={{ color: 'red' }}>{errors.confirmPassword}</span>}
+      </div>
+      <button type="submit">Зарегистрироваться</button>
+    </form>
+  );
+};
+
+export default RegistrationForm;
+
+(App.js)
+function App() {
+  return (
+    <div className="App">
+      <RegistrationForm />
+    </div>
+  );
+}
+
+
+Написать валидацию формы редактирования профиля:
+
+import React, { useState, useEffect } from 'react';
+
+function ProfileForm() {
+  const [firstName, setFirstName] = useState('');
+  const [middleName, setMiddleName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [birthdate, setBirthdate] = useState('');
+  const [address, setAddress] = useState('');
+
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    validateForm();
+  }, [firstName, middleName, lastName, birthdate, address]);
+
+  const validateForm = () => {
+    const errors = {};
+
+    if (!firstName.trim()) {
+      errors.firstName = 'Имя обязательно';
+    }
+
+    if (!middleName.trim()) {
+      errors.middleName = 'Отчество обязательно';
+    }
+
+    if (!lastName.trim()) {
+      errors.lastName = 'Фамилия обязательна';
+    }
+
+    if (birthdate && !/^(\d{2})\.(\d{2})\.(\d{4})$/.test(birthdate)) {
+      errors.birthdate = 'Неправильный формат даты (ДД.ММ.ГГГГ)';
+    }
+
+    setErrors(errors);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+        <div>
+        <label>Фамилия:</label>
+        <input
+          type="text"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+        {errors.lastName && <span>{errors.lastName}</span>}
+      </div>
+      <div>
+        <label>Имя:</label>
+        <input
+          type="text"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+        {errors.firstName && <span>{errors.firstName}</span>}
+      </div>
+      <div>
+        <label>Отчество:</label>
+        <input
+          type="text"
+          value={middleName}
+          onChange={(e) => setMiddleName(e.target.value)}
+        />
+        {errors.middleName && <span>{errors.middleName}</span>}
+      </div>
+      <div>
+        <label>Дата рождения:</label>
+        <input
+          type="text"
+          value={birthdate}
+          onChange={(e) => setBirthdate(e.target.value)}
+        />
+        {errors.birthdate && <span>{errors.birthdate}</span>}
+      </div>
+      <div>
+        <label>Адрес:</label>
+        <input
+          type="text"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+      </div>
+      <button type="submit">Сохранить</button>
+    </form>
+  );
+}
+
+export default ProfileForm;
+
+(App.js)
+import React from 'react';
+import './App.css';
+import ProfileForm from './Timer';
+
+function App() {
+  return (
+    <div className="App">
+      <ProfileForm />
+    </div>
+  );
+}
+
+export default App;
