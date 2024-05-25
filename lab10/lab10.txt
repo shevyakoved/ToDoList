@@ -1,0 +1,123 @@
+Сделать роуты для форм из прошлой лабораторной про валидацию форм.
+/login - <LoginForm />
+
+/registration - <RegistrationForm />
+
+/ - <Home />
+
+При вводе несуществующих адресов веб-приложение переходит на /.
+
+
+(App.js)
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';import Home from './Home';
+import EditForm from './Edit';
+import RegistrationForm from './Registration';
+
+const App = () => {
+  return (
+    <Router>
+        <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/registration" element={<RegistrationForm />} />
+            <Route path="/edit" element={<EditForm />} />
+            <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+    </Router>
+);
+};
+
+export default App;
+
+Использовал useNavigate для возвращения на / (navigate('/');)
+
+
+
+
+Написать компонент, отображающий форму: ID:
+При нажатии кнопки компонент обращается по адресу https://jsonplaceholder.typicode.com/posts/:id.
+
+Также компонент обращается по адресу https://jsonplaceholder.typicode.com/users/:userId, где userId получен из предыдущих данных.
+
+Показать экране: из post - поля title и body, из user - поля name, email.
+
+(App.js)
+import React from 'react';
+import Users from './UserForm'; 
+
+function App() {
+  const postId = 1; 
+
+  return (
+    <div className="App">
+      <PostAndUserForm postId={postId} />
+    </div>
+  );
+}
+
+
+(Form.js)
+export default App;
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+function Users({ postId }) {
+  const [post, setPost] = useState(null);
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPostAndUser = async () => {
+      try {
+        const [postResponse, userResponse] = await Promise.all([
+          axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`),
+          axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`),
+        ]);
+        setPost(postResponse.data);
+        setUser(userResponse.data);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    Users();
+
+  }, [postId]);
+  return (
+    <div>
+      {error && <div>Error: {error}</div>}
+      {post && user && (
+        <div>
+          <div>
+            <strong>Title:</strong> {post.title}
+          </div>
+          <div>
+            <strong>Body:</strong> {post.body}
+          </div>
+          <div>
+            <strong>Name:</strong> {user.name}
+          </div>
+          <div>
+            <strong>Email:</strong> {user.email}
+          </div>
+        </div>
+      )}
+      {!post && !error && <div>Loading...</div>}
+    </div>
+  );
+}
+export default Users;
+
+
+
+Склонировать репозиторий, запустить сервер.
+
+Из форм, написанных ранее (логин и регистрация), отправлять запросы:
+
+Регистрация: POST /user
+
+{ "nickname": "test", "password": "123" }
+Логин: POST /auth
+{ "nickname": "test", "password": "123" }
+После успешной регистрации перенаправлять на логин. После успешной авторизации перенаправлять на / (Home).
+
