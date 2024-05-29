@@ -1,0 +1,178 @@
+html {
+    height: 100%;
+}
+
+body {
+    background-color: #325050;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 100%;
+}
+
+.label {
+    text-align: center;
+    color: white;
+    font-size: 4em;
+}
+
+.control {
+    display: flex;
+    width: fit-content;
+    margin: 0 auto;
+    margin-bottom: 70px;
+}
+
+input {
+    height: 50px;
+    width: 300px;
+    border: none;
+    padding: 0 15px;
+}
+
+input:focus {
+    outline: none;
+    border: none;
+}
+
+button {
+    transition: .3s;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+    width: 150px;
+    cursor: pointer;
+}
+
+.create {
+    background-color: #D8D8D8;
+}
+
+.create:hover {
+    background-color: #d8d8d8c4;
+}
+
+.clear {
+    background-color: #A43434;
+}
+
+.clear:hover {
+    background-color: #a43434b9;
+}
+
+.list {
+    width: fit-content;
+    margin: 0 auto;
+    background-color: white;
+    margin-bottom: 50px;
+}
+
+.complete {
+    width: 50px;
+}
+
+.element {
+    height: 50px;
+    width: 500px;
+    display: flex;
+    align-items: center;
+}
+
+.remove {
+    margin-left: auto;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-size: 2em;
+}
+
+p {
+    color: white;
+}
+
+.footer {
+    margin-top: auto;
+    width: 99%;
+    background-color: #325050;
+    color: white;
+    text-align: center;
+}
+
+.complete {
+    width: 50px;
+    cursor: pointer;
+    padding: 5px 15px;
+    font-size: 1.5em;
+}
+
+.completed .text {
+    text-decoration: line-through;
+}
+
+.date {
+    font-size: 0.8em;
+    color: black;
+    margin-top: 5px;
+}
+
+.text {
+    display: block;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.statistics {
+    width: fit-content;
+    margin: 0 auto;
+    background-color: #325050;
+}
+
+.statistics hr {
+    width: 500px;
+}
+
+.info {
+    background-color: #325050;
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    list-style: none;
+}
+
+.info :first-child {
+    margin-left: 10px;
+}
+
+.info :last-child {
+    margin-right: 40px;
+}
+
+.completedtasks {
+    background: transparent;
+    color: white;
+}
+
+.uncompletedtasks {
+    background: transparent;
+    color: white;
+}
+
+.alltask {
+    background: transparent;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
